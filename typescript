@@ -1,0 +1,52 @@
+//Mustafa Cevik
+
+
+    enum Types{
+        TOYOTA =1,
+        HONDA,
+        MAZDA,
+        SUZUKI,
+        KIA,
+    }
+  
+    interface CarTypes {
+        xname: string;
+       rimsize: string;
+        xloadedtype:string;
+      }
+      
+      var xname: string = 'Mazda',
+         rimsize: string = '17inch rim',
+          Xloadedtype: string = 'sport';
+
+
+class CarType {
+    constructor(public name: string) { }
+    move(distanceInMiles: number = 0) {
+        console.log(`${this.name} moved ${distanceInMiles}m.`);
+    }
+}
+
+class Honda extends CarType {
+    constructor(name: string) { super(name); }
+    move(distanceInMiles = 5) {
+        console.log("Performance...");
+        super.move(distanceInMiles);
+    }
+}
+
+class Toyota extends CarType {
+    constructor(name: string) { super(name); }
+    move(distanceInMiles = 45) {
+        console.log("Familycar...");
+        super.move(distanceInMiles);
+    }
+}
+
+let civic = new Honda ("civic and corolla");
+let corolla: Toyota = new Toyota ("Toyotalessmiles");
+
+civic.move();
+corolla.move(60);
+
+  
