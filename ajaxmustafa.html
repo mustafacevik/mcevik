@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>MustafaProject</title>
+    <style>
+        img {
+            height: 100px;
+            float: left;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+   
+    <button onclick="Get()">Get</button>
+
+    <button onclick="Post()">Post</button>
+
+    <button onclick="Delete()">Delete</button>
+
+    <button onclick="Put()">Put</button>
+    <div id="images"></div>
+    <table id="table"></table>
+
+    <script>
+            //keyToHeadingArray is a map of object key to column header
+         function DisplayJSONobjectArrayAsTable(arrayOfObjects, elementID, keyToHeadingArray) {
+                let innerHTML = "";
+                let keys = [];
+                if (arrayOfObjects.length > 0) {
+                    //write head
+                    innerHTML += "<thead><tr>";
+                    keys = Object.keys(arrayOfObjects[0]);
+                    for (key = 0; key < keys.length; key++) {
+                        let columnHeading =  keys[key];
+                        try{
+                            if(keyToHeadingArray){
+                                columnHeading= keyToHeadingArray[columnHeading];
+                            }
+                        }
+                        catch(err){
+                            console.log(err);
+                        }
+                         innerHTML += "<th>" + columnHeading + "</th>";
+                                
+                        
+                    }
+                    innerHTML += "</tr></thead>";
+                    //write body
+                    innerHTML += "<tbody>";
+                    for (i = 0; i < arrayOfObjects.length; i++) {
+                        let currentObject = arrayOfObjects[i];
+                        innerHTML += "<tr>";
+                        for (j = 0; j < keys.length; j++) {
+                            let currentValue = currentObject[keys[j]];
+                            innerHTML += "<td>" + currentValue + "</td>";
+                        }
+                        innerHTML += "</tr>";
+                        // innerHTML += "<li>"+ arrayOfstring[i] + "</li>";
+                    }
+                    innerHTML += "</tbody>";
+                }
+                document.getElementById(elementID).innerHTML = innerHTML;
+            }
+        
+        function Get(){
+             $.getJSON("http://127.0.0.1:8080/listUsers", function(data, status, xhr){
+                  //tableHeadings.push({})
+                let tableHeadings = {
+               
+                    "name": "User Name",
+                    "password" : "Password",
+                    "JobTitle": "JobId",
+                    "Surname": "Name"
+                };
+                // let tableHeadings=[];
+                // tableHeadings["name"] = "User Name";
+                //  tableHeadings["password"] = "Password";
+                //  tableHeadings["profession"] = "Profession";
+                //  tableHeadings["JobTitle"] = "JOBTITLE";
+                
+                
+                 //sometimes yhou need to conver an object as a set of keys to an array of objects
+                 let objectKeys = Object.keys(data);
+                 let dataArray = [];
+                 for( i =0; i < objectKeys.length; i++){
+                     dataArray.push(data[objectKeys[i]]);
+                 }
+                 DisplayJSONobjectArrayAsTable(dataArray,"table", tableHeadings);
+                let pretyJSON = JSON.stringify(data, null, 2);
+                $('#images').html("<pre>" +pretyJSON +"</pre>") ;
+            });
+           
+        }
+        function Post(){
+            ajaxSetting = getDefaultAjaxSettings();
+            ajaxSetting.method = "POST";
+            ajaxSetting.contentType = "application/json";
+            ajaxSetting.url = "https://api.usaspending.gov/api/v2/bulk_download/list_agencies/";
+            ajaxSetting.data = "{\"agency\": 14}";
+            ajaxSetting.success =  function (data, status, xhr) {
+                console.log(status);
+                let prettyText = JSON.stringify(data, null, 2);
+                console.log(prettyText);
+                $('#images').html("<pre>"+prettyText+ "</pre>") ;
+                let responseHeaders = xhr.getAllResponseHeaders();
+                //   let responseHeader = xhr.getResponseHeader();
+                let responseText = xhr.responseText;
+                let responseCode = xhr.status;
+                let statusText = xhr.statusText;
+            }
+            jQuery.ajax(ajaxSetting);
+        }
+        function Delete(){
+            ajaxSetting = getDefaultAjaxSettings();
+            ajaxSetting.method = "DELETE";
+            ajaxSetting.contentType = "application/json";
+            ajaxSetting.url = "http://127.0.0.1:8080/id/2";
+           // ajaxSetting.data = "{\"agency\": 14}";
+            ajaxSetting.success =  function (data, status, xhr) {
+                console.log(status);
+                // let prettyText = JSON.stringify(data, null, 2);
+                // console.log(prettyText);
+                // $('#images').html("<pre>"+prettyText+ "</pre>") ;
+                // let responseHeaders = xhr.getAllResponseHeaders();
+                // //   let responseHeader = xhr.getResponseHeader();
+                // let responseText = xhr.responseText;
+                // let responseCode = xhr.status;
+                // let statusText = xhr.statusText;
+            }
+            jQuery.ajax(ajaxSetting);
+        }
+        function Put(){
+            $.getJSON("http://127.0.0.1:8080/listUsers", function(data, status, xhr){
+                  //tableHeadings.push({})
+                let tableHeadings = {
+               
+                    "name": "User Name",
+                    "password" : "Password",
+                    "JobTitle": "JobId",
+                    "Surname": "Name"
+                };
+              
+                
+                
+                 let objectKeys = Object.keys(data);
+                 let dataArray = [];
+                 for( i =0; i < objectKeys.length; i++){
+                     dataArray.push(data[objectKeys[i]]);
+                 }
+                 DisplayJSONobjectArrayAsTable(dataArray,"table", tableHeadings);
+                let pretyJSON = JSON.stringify(data, null, 2);
+                $('#images').html("<pre>" +pretyJSON +"</pre>") ;
+            });
+           
+        }
+        
+  
+        function getDefaultAjaxSettings() {
+            let ajaxSettings = {};
+            ajaxSettings.async = true;
+            //;ajaxSettings.beforeSend = function(jqXHR, settings)
+            ajaxSettings.cache = false;
+            ajaxSettings.complete = function (xhr, status) {
+                console.log(status);
+            }
+            //ajax.contents = 
+            ajaxSettings.contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+            //ajaxSettings.context = 
+            ajaxSettings.crossDomain = true;
+            //ajaxSettings.data = object of key value pairs for creating query string in GET requests
+            //ajaxSettings.dataFilter = function(data, filtertyp) - for processing raw data response
+            //ajaxSettings.dataType = "jsonp text json"; // or xml, html, script, json,jsonp or text
+            ajaxSettings.datatype = "json";
+            ajaxSettings.error = function (xhr, status, error) {
+                console.log(status + " :" + error)
+            };
+            ajaxSettings.global = true;  // trigger ajaxstart, ajaxstop
+            //ajaxSettings.headers = {};
+            //ajaxSettings.headers.
+            //ajaxSettings.ifModified = false;
+            //ajaxSettings.isLocal = true; // for getting local file system data
+            //ajaxSettings.jsonp = onJsonPLoad; //function name - don't do this
+            //ajaxSettings.jsonCallback  - function() to call on JSONP request
+            ajaxSettings.method = "GET";
+            //ajaxSettings.mimeType
+            //ajaxSettings.password = 
+            //ajaxSettings.processData = true;  do you parse the object into a query string...
+            //ajaxSettings.scriptCharset = charset for script requeetss
+            //ajaxSettings.statusCode  -- cool , for overriding status code response type
+            // ajaxSetting.statusCode = {
+            //      404: function() {
+            //              alert( "page not found" );
+            //     }
+            // };
+            ajaxSettings.success = function (data, status, xhr) {
+                console.log(status);
+                let prettyText = JSON.stringify(data, null, 2);
+                console.log(prettyText);
+                let responseHeaders = xhr.getAllResponseHeaders();
+                //   let responseHeader = xhr.getResponseHeader();
+                let responseText = xhr.responseText;
+                let responseCode = xhr.status;
+                let statusText = xhr.statusText;
+            }
+            //ajaxSettings
+            ajaxSettings.timeout = 5000; //timeout in millieseconds
+            ajaxSettings.traditional = false; // set to true to use traditional param serialization
+            //ajaxSettings.type = "GET"; // same as method for backward compat (< 1.10)
+            ajaxSettings.url = "https://api.usaspending.gov/api/v2/financial_balances/agencies/?funding_agency_id=775&fiscal_year=2017";
+            //ajaxSettings.xhr = function (xhr){}  for overrideing xhr object
+            //  ajaxSettings.xhrFields = {withCredentials:true};
+            return ajaxSettings;
+        }
+        function test() {
+            //see http://api.jquery.com/jQuery.ajax/#jqXHR  as well as https://zinoui.com/blog/cross-domain-ajax-request
+            let callSettings = getDefaultAjaxSettings();
+            callSettings.url = "https://api.usaspending.gov/api/v2/financial_balances/agencies/?funding_agency_id=775&fiscal_year=2017";
+            callSettings.url = "http://vus-glems-02:21212/commits/v1/approvers/me";
+            //callSettings.url = "http://dca-db-407:21212/commits/v1/approvers/me";
+            callSettings.url = "http://ems.amat.com:21212/commits/v1/approvers/me";
+            //   callSettings.url = "http://vus-glems-02.amat.com:21212/commits/v1/approvers/me";
+            //callSettings.dataType = "jsonp text json";
+            callSettings.xhrFields = { withCredentials: true };
+            $.ajax(callSettings);
+            // var promise = $.ajax(ajaxSettings);
+            // promise.done(function( data ){
+            //     console.log(data);
+            // });
+        }
+        (function () {
+            //   var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+            //   $.getJSON( flickerAPI, {
+            //     tags: "mount rainier",
+            //     tagmode: "any",
+            //     format: "json"
+            //   })
+            //     .done(function( data ) {
+            //       $.each( data.items, function( i, item ) {
+            //         $( "<img>" ).attr( "src", item.media.m ).appendTo( "#images" );
+            //         if ( i === 3 ) {
+            //           return false;
+            //         }
+            //       });
+            //     });
+           // test();
+        })();
+    </script>
+
+</body>
+
+</html>

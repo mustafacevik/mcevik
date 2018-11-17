@@ -1,0 +1,12 @@
+{
+    "type": "node",
+    "request": "launch",
+    "name": "Server",
+    "program": "${workspaceFolder}/server.js"
+},
+{
+    "type": "node",
+    "request": "launch",
+    "name": "Run Node on server.js",
+    "program": "${workspaceFolder}/nodeServer/server.js"
+},

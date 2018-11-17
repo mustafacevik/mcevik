@@ -1,0 +1,20 @@
+{
+    "user1" : {
+       "name" : "Mustafa",
+       "password" : "Ilikeprogramming",
+       "Job Title" : "Pilot",
+       "id": 1
+    },
+    "user2" : {
+       "name" : "Cevik",
+       "password" : "hey46121",
+       "Job Title" : "Police",
+       "id": 2
+    },
+    "user3" : {
+       "name" : "Orcun",
+       "password" : "LAAL4OSSSD",
+       "Job Title" : "Doctor",
+       "id": 3
+    }
+ }
